@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Seeds – UC Berkeley Voluntary Offsets Registry Dashboard
+=======================================================
 
-## Getting Started
+Open‑source dashboard and public API docs for exploring the Voluntary Registry Offsets Database maintained by UC Berkeley’s Berkeley Carbon Trading Project.
 
-First, run the development server:
+What’s inside
+-------------
+- Next.js App Router + React + TypeScript
+- Tailwind CSS + shadcn/ui
+- Recharts for charts, react-simple-maps for the world map
+- Supabase (RLS-enabled) as the data backend
+- Caching, pagination, and filterable views
+- API Docs page generated from your environment and optional `apidocs.md`
+
+Live pages
+----------
+- Landing page (hero, About, Tech Stack)
+- Dashboard: `/dashboard`
+  - Filters: Registry, Methodology, Country, Region, Project Name
+  - Views: Credit (charts), Projects (project-based charts), Map (choropleth by country)
+  - “Search” icon opens a live table of filtered projects
+- API Docs: `/api-docs`
+  - REST and supabase‑js examples
+  - Optionally renders per‑field examples parsed from `apidocs.md`
+
+Prerequisites
+-------------
+- Node 18+ and pnpm (recommended)
+- A Supabase project populated with the `voluntaryregistryoffsets` table
+- RLS enabled with a read‑only policy for anonymous users
+
+Environment
+-----------
+Create `.env.local` in the project root (get keys and URL from the api docs at https://rogueteacher.me/projects/seed.html):
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR-PROJECT.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
+
+# Optional but recommended for SEO and canonical URLs
+NEXT_PUBLIC_SITE_URL=https://your-domain.tld
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Run locally
+-----------
+```bash
+pnpm install
+pnpm dev
+# then open http://localhost:3000
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Using the API
+-------------
+Anonymous key is intentionally public (RLS protects data). Replace values with yours.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+curl "${NEXT_PUBLIC_SUPABASE_URL}/rest/v1/voluntaryregistryoffsets?select=*&limit=10" \
+  -H "apikey: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}" \
+  -H "Authorization: Bearer ${NEXT_PUBLIC_SUPABASE_ANON_KEY}"
+```
 
-## Learn More
+Common filters (REST query params):
+- `voluntary_registry=eq.VERRA`
+- `country=in.(United%20States,India)`
+- `methodology_protocol=ilike.*Forest*`
+- `project_name=ilike.*solar*`
 
-To learn more about Next.js, take a look at the following resources:
+Dashboards & features
+---------------------
+- KPIs: totals for projects, credits issued, retired, remaining
+- Charts: time series, registry/region/scope distributions
+- Map: project count or credits issued by country, log scaling, hover tooltip
+- Filters update the entire dashboard and the projects table
+- Server‑side pagination for tables and large Supabase reads
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+SEO
+---
+- Metadata, Open Graph, and Twitter cards are set in `src/app/layout.tsx`
+- `robots.txt` and `sitemap.xml` are provided (driven by `NEXT_PUBLIC_SITE_URL`)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Folder structure highlights
+---------------------------
+- `src/app/dashboard/page.tsx` – dashboard data and rendering
+- `src/components/dashboard/*` – charts, filters, map, KPI cards
+- `src/app/api-docs/page.tsx` – API docs (reads `NEXT_PUBLIC_SUPABASE_*`, parses `apidocs.md` if present)
+- `src/app/api/projects-table/route.ts` – filtered, paginated table data endpoint
+- `src/lib/supabase/*` – Supabase clients for server and client
 
-## Deploy on Vercel
+Contributing
+------------
+1. Fork and create a feature branch
+2. Make changes with clear commits
+3. Open a PR describing the change and screenshots (if UI)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+License
+-------
+CC0‑1.0 – Public Domain Dedication. See `LICENSE`.
