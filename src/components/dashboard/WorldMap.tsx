@@ -56,8 +56,8 @@ export function WorldMap({ projectsByCountry = {}, issuedByCountry = {} }: Props
     return map
   }
 
-  const projectsMap = React.useMemo(() => buildNormalizedMap(projectsByCountry), [projectsByCountry])
-  const issuedMap = React.useMemo(() => buildNormalizedMap(issuedByCountry), [issuedByCountry])
+  const projectsMap = React.useMemo(() => buildNormalizedMap(projectsByCountry), [projectsByCountry, buildNormalizedMap])
+  const issuedMap = React.useMemo(() => buildNormalizedMap(issuedByCountry), [issuedByCountry, buildNormalizedMap])
 
   const getValue = (name: string) => {
     const n = normalize(name)
@@ -108,8 +108,8 @@ export function WorldMap({ projectsByCountry = {}, issuedByCountry = {} }: Props
       <div className="relative flex-1" ref={wrapperRef}>
         <ComposableMap projectionConfig={{ scale: 145 }} className="absolute inset-0 w-full h-full">
           <Geographies geography={geoUrl}>
-            {({ geographies }: any) =>
-              geographies.map((geo: any) => {
+            {({ geographies }: { geographies: Array<any> }) =>
+              geographies.map((geo: { rsmKey: string; properties: Record<string, unknown> }) => {
                 const name = (geo.properties as any).name as string
                 const n = normalize(name)
                 const valProjects = projectsMap.get(n) ?? 0

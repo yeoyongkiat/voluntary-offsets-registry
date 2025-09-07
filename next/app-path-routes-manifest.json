@@ -1,0 +1,10 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/api-docs/page": "/api-docs",
+  "/api/projects-table/route": "/api/projects-table",
+  "/dashboard/page": "/dashboard",
+  "/favicon.ico/route": "/favicon.ico",
+  "/page": "/",
+  "/robots.txt/route": "/robots.txt",
+  "/sitemap.xml/route": "/sitemap.xml"
+}

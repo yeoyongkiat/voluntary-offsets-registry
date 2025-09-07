@@ -8,8 +8,7 @@ import { RegionBar } from "@/components/dashboard/RegionBar"
 import { ScopeBar } from "@/components/dashboard/ScopeBar"
 import { WorldMap } from "@/components/dashboard/WorldMap"
 import { ProjectsScopeBar } from "@/components/dashboard/ProjectsScopeBar"
-import { ProjectsDistStacked } from "@/components/dashboard/ProjectsDistStacked"
-import { ProjectsTypeLine } from "@/components/dashboard/ProjectsTypeLine"
+// Removed unused imports for cleaner build
 import { RRLine } from "@/components/dashboard/RRLine"
 import { unstable_cache } from "next/cache"
 
@@ -66,7 +65,24 @@ export default async function DashboardPage({ searchParams }: { searchParams?: P
 
   const getAggregates = async () => {
     const PAGE = 1000
-    const rows: any[] = []
+    type Row = {
+      project_id: string
+      project_name: string | null
+      voluntary_registry: string | null
+      type: string | null
+      country: string | null
+      region: string | null
+      scope: string | null
+      reduction_removal: string | null
+      methodology_protocol: string | null
+      first_year_of_project_vintage: number | null
+      total_credits_issued: number | null
+      total_credits_retired: number | null
+      total_credits_remaining: number | null
+      [key: string]: string | number | null
+    }
+
+    const rows: Row[] = []
     for (let from = 0; ; from += PAGE) {
       const to = from + PAGE - 1
       const { data, error } = await getBaseQuery().range(from, to)
@@ -114,22 +130,23 @@ export default async function DashboardPage({ searchParams }: { searchParams?: P
     })
 
     const categories = [...new Set(rows.map((r) => r.reduction_removal).filter(Boolean) as string[])]
-    const issuedRR = years.map((year) => {
+    type YearSeries = { year: number } & Record<string, number>
+    const issuedRR: YearSeries[] = years.map((year) => {
       const key = `credits_issued_by_issuance_year_${year}` as keyof typeof rows[number]
-      const base: any = { year }
+      const base: Record<string, number> = { year }
       categories.forEach((c) => {
         base[c] = rows.filter((r) => r.reduction_removal === c).reduce((s, r) => s + (Number(r[key]) || 0), 0)
       })
-      return base
+      return base as YearSeries
     })
 
-    const retiredRR = years.map((year) => {
+    const retiredRR: YearSeries[] = years.map((year) => {
       const key = (year >= 1996 && year <= 2025 ? `credits_retired_or_cancelled_${year}` : "") as keyof typeof rows[number]
-      const base: any = { year }
+      const base: Record<string, number> = { year }
       categories.forEach((c) => {
         base[c] = rows.filter((r) => r.reduction_removal === c).reduce((s, r) => s + (Number(r[key]) || 0), 0)
       })
-      return base
+      return base as YearSeries
     })
 
     const registries = [...new Set(rows.map((r) => r.voluntary_registry).filter(Boolean) as string[])]
@@ -144,45 +161,18 @@ export default async function DashboardPage({ searchParams }: { searchParams?: P
     const countries = [...new Set(rows.map((r) => r.country).filter(Boolean) as string[])]
     const regions = [...new Set(rows.map((r) => r.region).filter(Boolean) as string[])]
     const scopes = [...new Set(rows.map((r) => r.scope).filter(Boolean) as string[])]
-    const typeWhitelist = [
-      "REDD+",
-      "Improved Forest Management",
-      "Cookstoves",
-      "Solar - Centralised",
-      "Wind",
-      "Hydropower",
-      "Landfill Methane",
-      "Afforestation/Reforestation",
-    ]
-    const types = typeWhitelist.filter((t) => rows.some((r) => r.type === t))
     const minYear = rows.reduce((m, r) => Math.min(m, r.first_year_of_project_vintage ?? Infinity), Infinity)
     const maxYear = rows.reduce((m, r) => Math.max(m, r.first_year_of_project_vintage ?? -Infinity), -Infinity)
 
     // Build datasets for Projects view
     const projectsByScope = scopes.map((s) => ({ name: s, value: rows.filter((r) => r.scope === s).length }))
     const projectsByRegistry = registries.map((r) => ({ name: r, value: rows.filter((row) => row.voluntary_registry === r).length }))
-    const regionsList = regions
-    const projectsStacked = scopes.map((s) => {
-      const row: any = { scope: s }
-      regionsList.forEach((reg) => {
-        row[reg] = rows.filter((r) => r.scope === s && r.region === reg).length
-      })
-      return row
-    })
-    const yearsProjects = years
-    const projectsTypeSeries = yearsProjects.map((y) => {
-      const key = (y >= 1996 && y <= 2025 ? `credits_retired_or_cancelled_${y}` : "") as keyof typeof rows[number]
-      const base: any = { year: y }
-      types.forEach((t) => {
-        base[t] = rows.filter((r) => r.type === t).reduce((s, r) => s + (Number(r[key]) || 0), 0)
-      })
-      return base
-    })
+    // Removed stacked/type series for projects (not rendered currently)
 
     const projectsByCountryObj = Object.fromEntries(countryProjects.entries()) as Record<string, number>
     const issuedByCountryObj = Object.fromEntries(countryIssued.entries()) as Record<string, number>
 
-    return { totalProjects, totalIssued, totalRetired, totalRemaining, registryData, regionData, scopeData, ts, issuedRR, retiredRR, categories, registries, methodologies, countries, regions, scopes, types, projectsByRegistry, projectsByScope, projectsStacked, projectsTypeSeries, minYear, maxYear, projectsByCountry: projectsByCountryObj, issuedByCountry: issuedByCountryObj }
+    return { totalProjects, totalIssued, totalRetired, totalRemaining, registryData, regionData, scopeData, ts, issuedRR, retiredRR, categories, registries, methodologies, countries, regions, scopes, projectsByRegistry, projectsByScope, minYear, maxYear, projectsByCountry: projectsByCountryObj, issuedByCountry: issuedByCountryObj }
   }
 
   let fetchError: string | null = null
@@ -195,19 +185,16 @@ export default async function DashboardPage({ searchParams }: { searchParams?: P
     regionData: [] as Array<{ name: string; value: number }>,
     scopeData: [] as Array<{ name: string; value: number }>,
     ts: [] as Array<{ year: number; issued: number; retired: number }>,
-    issuedRR: [] as Array<any>,
-    retiredRR: [] as Array<any>,
+    issuedRR: [] as Array<{ year: number } & Record<string, number>>,
+    retiredRR: [] as Array<{ year: number } & Record<string, number>>,
     categories: [] as string[],
     registries: [] as string[],
     methodologies: [] as string[],
     countries: [] as string[],
     regions: [] as string[],
     scopes: [] as string[],
-    types: [] as string[],
     projectsByRegistry: [] as Array<{ name: string; value: number }>,
     projectsByScope: [] as Array<{ name: string; value: number }>,
-    projectsStacked: [] as Array<any>,
-    projectsTypeSeries: [] as Array<any>,
     minYear: 1990,
     maxYear: 2030,
     projectsByCountry: {} as Record<string, number>,
@@ -230,11 +217,11 @@ export default async function DashboardPage({ searchParams }: { searchParams?: P
       ],
       { revalidate: 900, tags: ["voluntaryregistryoffsets"] }
     )()
-  } catch (e: any) {
-    fetchError = e?.message ?? "Unknown error"
+  } catch (e: unknown) {
+    fetchError = e instanceof Error ? e.message : "Unknown error"
   }
 
-  const { totalProjects, totalIssued, totalRetired, totalRemaining, registryData, regionData, scopeData, ts, issuedRR, retiredRR, categories, registries, methodologies, countries, regions, scopes, types, projectsByRegistry, projectsByScope, projectsStacked, projectsTypeSeries, minYear, maxYear, projectsByCountry, issuedByCountry } = aggregates
+  const { totalProjects, totalIssued, totalRetired, totalRemaining, registryData, regionData, scopeData, ts, issuedRR, retiredRR, categories, registries, methodologies, countries, regions, scopes, projectsByRegistry, projectsByScope, minYear, maxYear, projectsByCountry, issuedByCountry } = aggregates
 
   // Filter option lists are derived from committed filters so choices narrow accordingly
   const options = { registriesAll: registries, methodologiesAll: methodologies, countriesAll: countries, regionsAll: regions, minYearAll: minYear, maxYearAll: maxYear }

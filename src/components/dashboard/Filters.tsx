@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation"
 import React, { useMemo } from "react"
-import { SelectField } from "@/components/ui/select"
+// import { SelectField } from "@/components/ui/select" // unused
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { Search } from "lucide-react"
@@ -31,12 +31,7 @@ export function Filters({ registries, methodologies, countries, regions }: Props
     [searchParams]
   )
 
-  const onChange = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString())
-    if (value) params.set(key, value)
-    else params.delete(key)
-    router.replace(`/dashboard?${params.toString()}`)
-  }
+  // onChange reserved for future simple selects
 
   const setMode = (value: "project" | "credit" | "map") => {
     const params = new URLSearchParams(searchParams.toString())

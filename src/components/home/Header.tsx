@@ -113,17 +113,15 @@ export function Header() {
     return () => clearInterval(interval)
   }, [])
 
-  const getOpacityForPosition = (index: number) => {
-    const cols = 20
-    const row = Math.floor(index / cols)
-    const col = index % cols
-    const maxRow = Math.floor(400 / cols) - 1
-    const maxCol = cols - 1
-
-    const progress = (row / maxRow + col / maxCol) / 2
-
-    return 0.05 + progress * 0.95
-  }
+  // const getOpacityForPosition = (index: number) => {
+  //   const cols = 20
+  //   const row = Math.floor(index / cols)
+  //   const col = index % cols
+  //   const maxRow = Math.floor(400 / cols) - 1
+  //   const maxCol = cols - 1
+  //   const progress = (row / maxRow + col / maxCol) / 2
+  //   return 0.05 + progress * 0.95
+  // }
 
   return (
     <section className="fixed inset-0 z-0 h-screen">

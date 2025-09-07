@@ -1,0 +1,10 @@
+var R=require("../../chunks/[turbopack]_runtime.js")("server/app/robots.txt/route.js")
+R.c("server/chunks/b8cd5_next_dist_compiled_c5994f47._.js")
+R.c("server/chunks/b8cd5_next_dist_9e2b63f4._.js")
+R.c("server/chunks/[root-of-the-server]__8c540a07._.js")
+R.c("server/chunks/b8cd5_next_5a9a3097._.js")
+R.c("server/chunks/b8cd5_next_dist_esm_server_lib_patch-fetch_49cc9b02.js")
+R.c("server/chunks/b8cd5_next_dist_82b0a243._.js")
+R.m(38285)
+R.m(72077)
+module.exports=R.m(72077).exports
