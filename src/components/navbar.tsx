@@ -66,6 +66,8 @@ export function Navbar() {
                     key={link.name}
                     href={link.href}
                     className="text-gray-900 hover:text-[rgb(11,36,109)] px-3 py-2 text-sm font-medium transition-colors duration-200"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     {link.name}
                   </a>
@@ -119,6 +121,8 @@ export function Navbar() {
                   key={link.name}
                   href={link.href}
                   className="text-gray-900 hover:text-[rgb(11,36,109)] hover:bg-gray-50 block px-3 py-2 text-base font-medium transition-colors duration-200"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => setIsOpen(false)}
                 >
                   {link.name}
