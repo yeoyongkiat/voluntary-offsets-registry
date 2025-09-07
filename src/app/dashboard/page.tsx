@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic"
 import { Navbar } from "@/components/navbar"
 import { supabaseServer } from "@/lib/supabase/server"
 import { KpiCards } from "@/components/dashboard/KpiCards"

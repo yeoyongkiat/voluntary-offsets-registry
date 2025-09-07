@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -56,10 +56,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteUrl,
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-  },
   icons: {
     icon: [
       { url: "/@seeds-icon.png", type: "image/png" },
@@ -68,6 +64,11 @@ export const metadata: Metadata = {
     shortcut: "/@seeds-icon.png",
     apple: "/@seeds-icon.png",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
