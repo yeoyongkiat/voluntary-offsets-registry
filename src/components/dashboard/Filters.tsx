@@ -5,7 +5,7 @@ import React, { useMemo } from "react"
 // import { SelectField } from "@/components/ui/select" // unused
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { Search } from "lucide-react"
+import { Search, X, ChevronLeft, ChevronRight } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 type Props = {
@@ -229,7 +229,9 @@ function SearchDialog({ searchParams }: { searchParams: ReturnType<typeof useSea
           <div className="relative bg-white rounded-md shadow-lg max-w-6xl w-[95vw] max-h-[85vh] overflow-auto p-4">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-lg font-semibold">Projects</h2>
-              <Button size="sm" variant="outline" onClick={onClose}>Close</Button>
+              <Button size="sm" variant="outline" onClick={onClose} aria-label="Close">
+                <X className="h-4 w-4" aria-hidden="true" />
+              </Button>
             </div>
             <SearchResultsTable searchParams={searchParams} />
           </div>
@@ -274,9 +276,13 @@ function SearchResultsTable({ searchParams }: { searchParams: ReturnType<typeof 
       <div className="flex items-center justify-between mb-2 text-sm">
         <div>Showing {rows.length.toLocaleString()} of {count.toLocaleString()}</div>
         <div className="flex items-center gap-2">
-          <Button size="sm" variant="outline" onClick={() => fetchData(Math.max(1, page - 1))} disabled={page <= 1 || loading}>Prev</Button>
-          <div>Page {page} / {totalPages}</div>
-          <Button size="sm" variant="outline" onClick={() => fetchData(Math.min(totalPages, page + 1))} disabled={page >= totalPages || loading}>Next</Button>
+          <Button size="sm" variant="outline" onClick={() => fetchData(Math.max(1, page - 1))} disabled={page <= 1 || loading} aria-label="Previous page">
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <div>pg {page} / {totalPages}</div>
+          <Button size="sm" variant="outline" onClick={() => fetchData(Math.min(totalPages, page + 1))} disabled={page >= totalPages || loading} aria-label="Next page">
+            <ChevronRight className="h-4 w-4" />
+          </Button>
         </div>
       </div>
       <div className="overflow-auto">

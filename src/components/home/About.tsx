@@ -1,18 +1,14 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { } from "react"
 // import { Button } from "@/components/ui/button" // unused
 
 export function About() {
   return (
-    <motion.section
+    <section
       id="about"
-      className="h-screen relative z-10 px-4 lg:px-8 snap-start snap-always flex items-center scroll-mt-16"
+      className="min-h-screen relative z-10 px-4 lg:px-8 flex items-center scroll-mt-16"
       style={{ backgroundColor: "rgb(11, 36, 109)" }}
-      initial={{ y: "100%", opacity: 0 }}
-      whileInView={{ y: 0, opacity: 1 }}
-      viewport={{ once: true, amount: 0.1 }}
-      transition={{ type: "spring", stiffness: 100, damping: 18, mass: 0.6 }}
     >
       <div className="max-w-4xl mx-auto space-y-6">
         <h2 className="text-center text-4xl md:text-5xl lg:text-6xl font-bold" style={{ color: "rgb(253, 181, 21)" }}>
@@ -55,7 +51,7 @@ export function About() {
           program. 
         </p>
       </div>
-    </motion.section>
+    </section>
   )
 }
 

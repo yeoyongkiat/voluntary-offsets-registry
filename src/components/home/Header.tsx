@@ -4,6 +4,7 @@ import type React from "react"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { GridAnimation } from "@/components/home/GridAnimation"
+import { LayoutDashboard, File as FileIcon } from "lucide-react"
 
 export function Header() {
   const [gridItems, setGridItems] = useState<Array<{ id: number; color: string; isEmpty: boolean }>>([])
@@ -124,7 +125,7 @@ export function Header() {
   // }
 
   return (
-    <section className="fixed inset-0 z-0 h-screen">
+    <section className="relative h-screen">
       <div className="grid lg:grid-cols-2 items-center h-full">
         <div className="space-y-4 md:space-y-6 lg:space-y-8 px-4 lg:px-8 lg:pr-8 flex flex-col justify-center h-full pt-32 md:pt-40 lg:pt-16">
           <div className="space-y-4 md:space-y-6">
@@ -144,27 +145,31 @@ export function Header() {
           <div className="flex gap-3 md:gap-4">
             <a
               href="/dashboard"
-              className="bg-white text-black border border-gray-300 hover:bg-[rgb(11,36,109)] hover:text-white hover:border-transparent px-8 py-3 text-base font-medium transition-colors cursor-pointer rounded-md"
+              className="bg-white text-black border border-gray-300 hover:bg-[rgb(11,36,109)] hover:text-white hover:border-transparent px-3 py-3 md:px-8 md:py-3 text-base font-medium transition-colors cursor-pointer rounded-md inline-flex items-center justify-center"
+              aria-label="Open Dashboard"
             >
-              Dashboard
+              <LayoutDashboard className="h-5 w-5 md:hidden" aria-hidden="true" />
+              <span className="hidden md:inline">Dashboard</span>
             </a>
             <a
               href="/api-docs"
-              className="bg-white text-black border border-gray-300 hover:bg-[rgb(11,36,109)] hover:text-white hover:border-transparent px-8 py-3 text-base font-medium transition-colors cursor-pointer rounded-md"
+              className="bg-white text-black border border-gray-300 hover:bg-[rgb(11,36,109)] hover:text-white hover:border-transparent px-3 py-3 md:px-8 md:py-3 text-base font-medium transition-colors cursor-pointer rounded-md inline-flex items-center justify-center"
+              aria-label="Open API Docs"
             >
-              API Docs
+              <FileIcon className="h-5 w-5 md:hidden" aria-hidden="true" />
+              <span className="hidden md:inline">API Docs</span>
             </a>
             <a
               href="https://github.com/yeoyongkiat/voluntary-offsets-registry"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-black text-white border border-gray-300 hover:bg-gray-800 px-8 py-3 text-base font-medium transition-colors cursor-pointer rounded-md inline-flex items-center gap-2"
-              aria-label="GitHub repository"
+              className="bg-black text-white border border-gray-300 hover:bg-gray-800 px-3 py-3 md:px-8 md:py-3 text-base font-medium transition-colors cursor-pointer rounded-md inline-flex items-center justify-center gap-2"
+              aria-label="Open GitHub repository"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
                 <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.455-1.158-1.11-1.467-1.11-1.467-.908-.62.069-.607.069-.607 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.091-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.269 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.295 2.748-1.026 2.748-1.026.546 1.378.203 2.397.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.848-2.338 4.695-4.566 4.943.36.31.679.92.679 1.855 0 1.338-.012 2.416-.012 2.744 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.523 2 12 2z" clipRule="evenodd" />
               </svg>
-              GitHub
+              <span className="hidden md:inline">GitHub</span>
             </a>
           </div>
 

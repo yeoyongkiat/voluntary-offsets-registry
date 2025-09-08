@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-import { motion } from "framer-motion"
 
 const technologies: Array<{ name: string; url: string }> = [
   { name: "Next.js", url: "https://nextjs.org" },
@@ -13,13 +12,9 @@ const technologies: Array<{ name: string; url: string }> = [
 
 export function TechStack() {
   return (
-    <motion.section
+    <section
       id="techstack"
-      className="h-screen sticky top-0 z-20 flex items-center px-4 lg:px-8 bg-white snap-start snap-always scroll-mt-16"
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="min-h-screen flex items-center px-4 lg:px-8 bg-white scroll-mt-16"
     >
       <div className="max-w-5xl mx-auto w-full">
         <h3
@@ -63,7 +58,7 @@ export function TechStack() {
           </a>
         </div>
       </div>
-    </motion.section>
+    </section>
   )
 }
 
